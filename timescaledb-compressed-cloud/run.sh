@@ -8,6 +8,6 @@ cat queries.sql | while read query; do
 
     echo "$query";
     for i in $(seq 1 $TRIES); do
-        sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" -d "$DATABASE" psql -t -c '\timing' -c "$query" | grep 'Time'
+        psql -u postgres -h "$HOST" -p 9001 "sslmode=require" -d "$DATABASE" -t -c '\timing' -c "$query" | grep 'Time'
     done;
 done;
