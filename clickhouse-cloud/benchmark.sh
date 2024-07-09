@@ -11,14 +11,14 @@
 
 clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" < create.sql
 
-# clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --query "
-#   INSERT INTO hits SELECT * FROM url('https://clickhouse-public-datasets.s3.amazonaws.com/hits_compatible/hits.tsv.gz')
-# " --time
+clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --query "
+  INSERT INTO hits SELECT * FROM url('https://clickhouse-public-datasets.s3.amazonaws.com/hits_compatible/hits.tsv.gz')
+" --time
 
-# # 343.455
+# 343.455
 
-# # Run the queries
+# Run the queries
 
-# ./run.sh
+./run.sh
 
-# clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --query "SELECT total_bytes FROM system.tables WHERE name = 'hits' AND database = 'default'"
+clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --query "SELECT total_bytes FROM system.tables WHERE name = 'hits' AND database = 'default'"
