@@ -4,8 +4,8 @@
 # export HOST=...
 # export PGPASSWORD=...
 
-sudo -u postgres -h "$HOST" -p 9001 psql -c "CREATE DATABASE test"
-sudo -u postgres -h "$HOST" -p 9001 psql test -c "CREATE EXTENSION IF NOT EXISTS timescaledb"
+sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql -c "CREATE DATABASE test"
+sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql test -c "CREATE EXTENSION IF NOT EXISTS timescaledb"
 
 # Import the data
 
@@ -14,13 +14,13 @@ gzip -d hits.tsv.gz
 sudo chmod og+rX ~
 chmod 777 hits.tsv
 
-sudo -u postgres -h "$HOST" -p 9001 psql test < create.sql
-sudo -u postgres -h "$HOST" -p 9001 psql test -c "SELECT create_hypertable('hits', 'eventtime')"
-sudo -u postgres -h "$HOST" -p 9001 psql test -c "CREATE INDEX ix_counterid ON hits (counterid)"
-sudo -u postgres -h "$HOST" -p 9001 psql test -c "ALTER TABLE hits SET (timescaledb.compress, timescaledb.compress_orderby = 'counterid, eventdate, userid, eventtime')"
-sudo -u postgres -h "$HOST" -p 9001 psql test -c "SELECT add_compression_policy('hits', INTERVAL '1s')"
+sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql test < create.sql
+sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql test -c "SELECT create_hypertable('hits', 'eventtime')"
+sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql test -c "CREATE INDEX ix_counterid ON hits (counterid)"
+sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql test -c "ALTER TABLE hits SET (timescaledb.compress, timescaledb.compress_orderby = 'counterid, eventdate, userid, eventtime')"
+sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql test -c "SELECT add_compression_policy('hits', INTERVAL '1s')"
 
-sudo -u postgres -h "$HOST" -p 9001 psql test -t -c '\timing' -c "\\copy hits FROM 'hits.tsv'"
+sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql test -t -c '\timing' -c "\\copy hits FROM 'hits.tsv'"
 
 # 1619875.288 ms (26:59.875)
 
@@ -28,7 +28,7 @@ sudo -u postgres -h "$HOST" -p 9001 psql test -t -c '\timing' -c "\\copy hits FR
 # https://docs.timescale.com/timescaledb/latest/how-to-guides/compression/manually-compress-chunks/#compress-chunks-manually
 # TimescaleDB benchmark wihout compression is available in timescaledb directory
 
-time sudo -u postgres -h "$HOST" -p 9001 psql test -c "SELECT compress_chunk(i, if_not_compressed => true) FROM show_chunks('hits') i"
+time sudo -u postgres -h "$HOST" -p 9001 "sslmode=require" psql test -c "SELECT compress_chunk(i, if_not_compressed => true) FROM show_chunks('hits') i"
 
 # 49m45.120s
 
