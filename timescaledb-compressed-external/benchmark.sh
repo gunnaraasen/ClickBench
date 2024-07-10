@@ -5,6 +5,7 @@
 # export PGPASSWORD=...
 # export DATABASE=...
 
+
 psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "CREATE EXTENSION IF NOT EXISTS timescaledb"
 
 # Import the data
@@ -32,11 +33,6 @@ time psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "SELECT compress_chun
 
 # 49m45.120s
 
-./run.sh 2>&1 | tee log.txt
-
-sudo du -bcs /var/lib/postgresql/14/main/
-
-cat log.txt | grep -oP 'Time: \d+\.\d+ ms' | sed -r -e 's/Time: ([0-9]+\.[0-9]+) ms/\1/' |
-    awk '{ if (i % 3 == 0) { printf "[" }; printf $1 / 1000; if (i % 3 != 2) { printf "," } else { print "]," }; ++i; }'
+./run.sh
 
 rm hits.tsv.gz

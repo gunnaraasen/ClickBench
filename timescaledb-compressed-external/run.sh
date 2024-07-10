@@ -9,7 +9,7 @@ cat queries.sql | while read query; do
 
     echo -n "["
     for i in $(seq 1 $TRIES); do
-        RES=$(psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -t -c '\timing' -c "$query" | grep 'Time' 2>&1 ||:)
+        RES=$(psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -t -c '\timing' -c "$query" | grep 'Time' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?' 2>&1 ||:)
         [[ "$?" == "0" ]] && echo -n "${RES}" || echo -n "null"
         [[ "$i" != $TRIES ]] && echo -n ", "
     done;
