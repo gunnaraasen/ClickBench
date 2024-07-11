@@ -24,7 +24,7 @@ clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --databas
 # 343.455
 
 # Run the queries
-./run.sh | tee $RESULTDIR/$FILENAME.log
+./run.sh | tee -a $RESULTDIR/$FILENAME.log
 
 cat $RESULTDIR/$FILENAME.log
 
