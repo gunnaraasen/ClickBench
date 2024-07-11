@@ -36,7 +36,7 @@ time psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "SELECT compress_chun
 
 # 49m45.120s
 
-./run.sh &> $RESULTDIR/$FILENAME.log
+./run.sh > $RESULTDIR/$FILENAME.log
 
 cat $RESULTDIR/$FILENAME.log
 rm hits.tsv.gz
