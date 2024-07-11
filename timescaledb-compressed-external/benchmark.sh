@@ -32,11 +32,11 @@ psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -t -c '\timing' -c "\\copy hi
 # https://docs.timescale.com/timescaledb/latest/how-to-guides/compression/manually-compress-chunks/#compress-chunks-manually
 # TimescaleDB benchmark wihout compression is available in timescaledb directory
 
+# 49m45.120s
 time psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "SELECT compress_chunk(i, if_not_compressed => true) FROM show_chunks('hits') i"
 
-# 49m45.120s
-
-./run.sh > $RESULTDIR/$FILENAME.log
+# Run the queries
+./run.sh 2>&1 | tee $RESULTDIR/$FILENAME.log
 
 cat $RESULTDIR/$FILENAME.log
 rm hits.tsv.gz
