@@ -10,6 +10,10 @@
 # export USER=...
 # export PASSWORD=...
 # export DATABASE=...
+# export RESULTDIR=...
+# export FILENAME=...
+
+echo "Running the benchmark"
 
 clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" < create.sql
 
@@ -21,6 +25,10 @@ clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --databas
 
 # Run the queries
 
-./run.sh
+./run.sh &> $RESULTDIR/$FILENAME.log
+
+cat $RESULTDIR/$FILENAME.log
 
 clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --query "SELECT total_bytes FROM system.tables WHERE name = 'hits' AND database = 'default'"
+
+echo "Benchmark done"
