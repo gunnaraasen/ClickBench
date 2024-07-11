@@ -3,7 +3,7 @@
 # export RESULTDIR=...
 # export JSONFILE=...
 
-for f in "${RESULTDIR}"/timescaledb.log
+for f in $RESULTDIR/timescaledb.log
 do
     echo '
 {
@@ -16,5 +16,5 @@ do
 '$(grep -F "[" "$f" | head -c-2)'
 ]
 }
-' > "${RESULTDIR}"/"${JSONFILE}"
+' > $RESULTDIR/$JSONFILE
 done
