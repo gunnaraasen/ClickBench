@@ -1,5 +1,7 @@
 #!/bin/bash
 
+date +%Y%m%d%H%M%S
+
 TRIES=3
 QUERY_NUM=1
 
@@ -18,3 +20,5 @@ cat queries.sql | while read query; do
 
     QUERY_NUM=$((QUERY_NUM + 1))
 done;
+
+date +%Y%m%d%H%M%S

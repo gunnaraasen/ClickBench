@@ -4,7 +4,10 @@
 # export HOST=...
 # export PGPASSWORD=...
 # export DATABASE=...
+# export RESULTDIR=...
+# export FILENAME=...
 
+echo "Running the benchmark"
 
 psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "CREATE EXTENSION IF NOT EXISTS timescaledb"
 
@@ -33,6 +36,8 @@ time psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "SELECT compress_chun
 
 # 49m45.120s
 
-./run.sh
+./run.sh 2>&1 | tee $RESULTDIR/$FILENAME.log
 
 rm hits.tsv.gz
+
+echo "Benchmark done"

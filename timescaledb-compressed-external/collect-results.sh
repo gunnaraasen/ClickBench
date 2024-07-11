@@ -1,20 +1,22 @@
 #!/bin/bash
 
 # export RESULTDIR=...
-# export JSONFILE=...
+# export FILENAME=...
 
-for f in $RESULTDIR/timescaledb.log
+for f in $RESULTDIR/$FILENAME.log
 do
     echo '
 {
     "system": "TimescaleDB",
     "date": "'$(date +%F)'",
-    "load_time": "'$(head -n1 "$f" | tr -d "\n")'",
-    "data_size": "'$(tail -n1 "$f" | tr -d "\n")'",
+    "start_time": "'$(head -n1 "$f" | tr -d "\n")'",
+    "end_time": "'$(tail -n1 "$f" | tr -d "\n")'",
 
     "result": [
 '$(grep -F "[" "$f" | head -c-2)'
 ]
 }
-' > $RESULTDIR/$JSONFILE
+' > $RESULTDIR/$FILENAME.json
 done
+    # "data_size": "'$(tail -n1 "$f" | tr -d "\n")'",
+    # "load_time": "'$(head -n1 "$f" | tr -d "\n")'",
