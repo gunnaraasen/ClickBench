@@ -13,7 +13,8 @@ cat queries.sql | while read query; do
     echo -n "\"runtimes\": ["
     for i in $(seq 1 $TRIES); do
         RES=$(psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -t -c '\timing' -c "$query" | grep 'Time' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?' 2>&1 ||:)
-        [[ "$?" == "0" ]] && echo -n "${RES}" || echo -n "null"
+        FIRST_ITEM=$(echo "$RES" | head -n 1)
+        [[ "$?" == "0" ]] && echo -n "${FIRST_ITEM}" || echo -n 0
         [[ "$i" != $TRIES ]] && echo -n ", "
     done;
     echo "]},"

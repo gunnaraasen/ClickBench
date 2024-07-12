@@ -23,10 +23,12 @@ clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --databas
 
 # 343.455
 
+echo "Import data done"
+
+echo "Running the queries"
+
 # Run the queries
 ./run.sh 2>&1 | tee "${RESULTDIR}/${FILENAME}.log"
-
-cat $RESULTDIR/$FILENAME.log
 
 cat $RESULTDIR/$FILENAME.log
 
