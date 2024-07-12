@@ -33,7 +33,7 @@ psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -t -c '\timing' -c "\\copy hi
 # TimescaleDB benchmark wihout compression is available in timescaledb directory
 
 # 49m45.120s
-time psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "SELECT compress_chunk(i, if_not_compressed => true) FROM show_chunks('hits') i"
+# time psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "SELECT compress_chunk(i, if_not_compressed => true) FROM show_chunks('hits') i"
 
 # Run the queries
 ./run.sh 2>&1 | tee log.txt
