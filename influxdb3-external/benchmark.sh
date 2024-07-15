@@ -2,7 +2,6 @@
 
 
 # export TELEGRAF_PATH=...
-# export INFLUXCTL_PATH=...
 # export HOST=...
 # export TOKEN=...
 # export DATABASE=...
@@ -14,6 +13,10 @@ echo "Running the benchmark"
 # Import the data
 
 wget --no-verbose --continue 'https://datasets.clickhouse.com/hits_compatible/hits.csv.gz'
+gzip -d hits.csv.gz
+sudo chmod og+rX ~
+chmod 777 hits.csv
+
 gzip -d hits.csv.gz
 cat <<'EOF' > telegraf-clickbench.conf
 [[inputs.file]]
