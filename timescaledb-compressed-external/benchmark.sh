@@ -44,5 +44,6 @@ echo "Running the queries"
 
 cat $RESULTDIR/$FILENAME.log
 rm hits_aa.tsv.gz
+rm hits_aa.tsv
 
 echo "Benchmark done"
