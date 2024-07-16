@@ -12,11 +12,12 @@ echo "Running the benchmark"
 psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "CREATE EXTENSION IF NOT EXISTS timescaledb"
 
 # Import the data
-
-wget --no-verbose --continue 'https://datasets.clickhouse.com/hits_compatible/hits.tsv.gz'
-gzip -d hits.tsv.gz
-sudo chmod og+rX ~
-chmod 777 hits.tsv
+cp $HOME/ClickBench/datasets/hits_aa.tsv.gz .
+gzip -d hits_aa.tsv.gz
+# wget --no-verbose --continue 'https://datasets.clickhouse.com/hits_compatible/hits.tsv.gz'
+# gzip -d hits.tsv.gz
+# sudo chmod og+rX ~
+# chmod 777 hits.tsv
 
 psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" < create.sql
 psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "SELECT create_hypertable('hits', 'eventtime')"
@@ -24,7 +25,7 @@ psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "CREATE INDEX ix_counterid
 psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "ALTER TABLE hits SET (timescaledb.compress, timescaledb.compress_orderby = 'counterid, eventdate, userid, eventtime')"
 psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -c "SELECT add_compression_policy('hits', INTERVAL '1s')"
 
-psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -t -c '\timing' -c "\\copy hits FROM 'hits.tsv'"
+psql -U postgres -h "$HOST" -p 9001 -d "$DATABASE" -t -c '\timing' -c "\\copy hits FROM 'hits_aa.tsv'"
 
 # 1619875.288 ms (26:59.875)
 
@@ -42,6 +43,6 @@ echo "Running the queries"
 ./run.sh 2>&1 | tee "${RESULTDIR}/${FILENAME}.log"
 
 cat $RESULTDIR/$FILENAME.log
-rm hits.tsv.gz
+rm hits_aa.tsv.gz
 
 echo "Benchmark done"
