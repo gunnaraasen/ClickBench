@@ -12,15 +12,11 @@ echo "Running the benchmark"
 
 # Import the data
 
-wget --no-verbose --continue 'https://datasets.clickhouse.com/hits_compatible/hits.csv.gz'
-gzip -d hits.csv.gz
-sudo chmod og+rX ~
-chmod 777 hits.csv
+gzip -d $HOME/ClickBench/datasets/hits_aa.csv.gz
 
-gzip -d hits.csv.gz
 cat <<'EOF' > telegraf-clickbench.conf
 [[inputs.file]]
-  files = ["hits.csv"]
+  files = ["$HOME/ClickBench/datasets/hits_aa.csv"]
   data_format = "csv"
   csv_header_row_count = 0
   csv_column_names = []
@@ -57,14 +53,14 @@ EOF
 HOST=${HOST} TOKEN=${TOKEN} DATABASE=${DATABASE} start-stop-daemon --start \
     --background \
     --no-close \
-    --pidfile telegraf-clickbench.pid \
+    --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench.pid \
     --exec $TELEGRAF_PATH \
-    -- --config telegraf-clickbench.conf \
-        --pidfile telegraf-clickbench.pid > telegraf-clickbench.log 2>&1
+    -- --config ~/ClickBench/influxdb3-external/telegraf-clickbench.conf \
+        --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench.pid > ~/ClickBench/influxdb3-external/telegraf-clickbench.log 2>&1
 
 sleep 60
 
-start-stop-daemon --stop --oknodo --pidfile telegraf-clickbench.pid
+start-stop-daemon --stop --oknodo --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench.pid
 
 echo "Import data done"
 
@@ -74,7 +70,8 @@ echo "Running the queries"
 ./run.sh 2>&1 | tee "${RESULTDIR}/${FILENAME}.log"
 
 cat $RESULTDIR/$FILENAME.log
-# rm hits.csv.gz
+rm hits.csv.gz
+rm hits.csv
 
 
 echo "Benchmark done"
