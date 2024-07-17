@@ -51,6 +51,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	elapsed := time.Since(start).Milliseconds()
-	fmt.Fprintf(os.Stdout, "%d\n", elapsed)
+	elapsed := float64(time.Since(start).Seconds() * 1000)
+	fmt.Fprintf(os.Stdout, "elapsed %.3fms\n", elapsed)
 }
