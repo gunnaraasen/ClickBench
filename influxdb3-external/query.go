@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -41,13 +40,13 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Fprintln(os.Stdout, "Read all data in the stream:")
-	data, err := iterator.Raw().Reader.Read()
-	fmt.Fprintln(os.Stdout, data)
+	// fmt.Fprintln(os.Stdout, "Read all data in the stream:")
+	_, err = iterator.Raw().Reader.Read()
+	// fmt.Fprintln(os.Stdout, data)
 	if err != nil {
 		panic(err)
 	}
 
 	elapsed := time.Since(start).Milliseconds()
-	log.Printf("elapsed %d ms", elapsed)
+	fmt.Fprintf(os.Stdout, "elapsed %d ms", elapsed)
 }
