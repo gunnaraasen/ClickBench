@@ -21,13 +21,15 @@ func main() {
 		Database: os.Args[3],
 	})
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	defer func(client *influxdb3.Client) {
 		err := client.Close()
 		if err != nil {
-			panic(err)
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 	}(client)
 
@@ -37,16 +39,18 @@ func main() {
 
 	iterator, err := client.Query(context.Background(), query)
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	// fmt.Fprintln(os.Stdout, "Read all data in the stream:")
 	_, err = iterator.Raw().Reader.Read()
 	// fmt.Fprintln(os.Stdout, data)
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	elapsed := time.Since(start).Milliseconds()
-	fmt.Fprintf(os.Stdout, "elapsed %d ms", elapsed)
+	fmt.Fprintf(os.Stdout, "%d\n", elapsed)
 }
