@@ -9,8 +9,8 @@ cat queries.sql | while read query; do
     echo -n "{\"query\": \""$query"\","
     echo -n "\"runtimes\": ["
     for i in $(seq 1 $TRIES); do
-        RES=$(clickhouse-client --host "${FQDN:=localhost}" --user "$USER" --password "${PASSWORD:=}" --database "$DATABASE" --time --format=Null --query="$query" --progress 0 2>&1 | tee >(cat) >> "${RESULTDIR}/${FILENAME}-query-output.log" ||:)
-        FIRST_ITEM=$(echo "$RES" | head -n 1)
+        RES=$(clickhouse-client --host "${HOST:=localhost}" --user "$USER" --password "${PASSWORD:=}" --database "$DATABASE" --time --format=Null --query="$query" --progress 0 2>&1 | tee >(cat) >> "${RESULTDIR}/${FILENAME}-query-output.log" ||:)
+        FIRST_ITEM=$(echo "$RES * 1000" | bc | head -n 1)
         [[ "$?" == "0" ]] && echo -n "${FIRST_ITEM}" || echo -n 0
         [[ "$i" != $TRIES ]] && echo -n ", "
     done

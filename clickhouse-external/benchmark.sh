@@ -6,20 +6,21 @@
 
 # Load the data
 
-# export FQDN=...
+# export HOST=...
 # export USER=...
 # export PASSWORD=...
 # export DATABASE=...
 # export RESULTDIR=...
 # export FILENAME=...
 
+cp $HOME/ClickBench/datasets/hits_aa.tsv.gz .
+gzip -d hits_aa.tsv.gz
+
 echo "Running the benchmark"
 
-clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" < create.sql
+clickhouse-client --host "$HOST" --user "$USER" --password "$PASSWORD" --database "$DATABASE" < create.sql
 
-clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --query "
-  INSERT INTO hits SELECT * FROM url('https://clickhouse-public-datasets.s3.amazonaws.com/hits_compatible/hits.tsv.gz')
-" --time
+clickhouse-client --host "$HOST" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --time --query "INSERT INTO hits FORMAT TabSeparated" < hits_aa.tsv
 
 # 343.455
 
@@ -32,6 +33,9 @@ echo "Running the queries"
 
 cat $RESULTDIR/$FILENAME.log
 
-clickhouse-client --host "$FQDN" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --query "SELECT total_bytes FROM system.tables WHERE name = 'hits' AND database = 'default'"
+clickhouse-client --host "$HOST" --user "$USER" --password "$PASSWORD" --database "$DATABASE" --query "SELECT total_bytes FROM system.tables WHERE name = 'hits' AND database = 'default'"
+
+rm hits_aa.tsv.gz
+rm hits_aa.tsv
 
 echo "Benchmark done"
