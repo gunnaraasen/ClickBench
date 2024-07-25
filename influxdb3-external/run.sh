@@ -9,7 +9,7 @@ cat queries.sql | while read query; do
     echo -n "{\"query\": \""$query"\","
     echo -n "\"runtimes\": ["
     for i in $(seq 1 $TRIES); do
-        RES=$(./query "$HOST" "$TOKEN" "$DATABASE" "$query" 2>> "${RESULTDIR}/${FILENAME}-error.log" ||: )
+        RES=$(./query "$HOST:$PORT" "$TOKEN" "$DATABASE" "$query" 2>> "${RESULTDIR}/${FILENAME}-error.log" ||: )
         ELAPSED=$(echo $RES | grep -Eo '[+-]?[0-9]+([.][0-9]+)?' || echo 0)
         [[ "$?" == "0" ]] && echo -n "${ELAPSED}" || echo -n 0
         [[ "$i" != $TRIES ]] && echo -n ", "
