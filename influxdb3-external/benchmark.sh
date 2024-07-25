@@ -15,7 +15,7 @@ echo "Running the benchmark"
 cp $HOME/ClickBench/datasets/hits_aa.csv.gz .
 gzip -d hits_aa.csv.gz
 
-cat <<'EOF' > telegraf-clickbench.conf
+cat <<'EOF' > telegraf-clickbench-$RANDOM_STRING.conf
 [agent]
   interval = "2m"
   round_interval = false
@@ -58,17 +58,19 @@ cat <<'EOF' > telegraf-clickbench.conf
   content_encoding = "gzip"
 EOF
 
+RANDOM_STRING=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 3)
+
 HOST=${HOST} TOKEN=${TOKEN} DATABASE=${DATABASE} start-stop-daemon --start \
     --background \
     --no-close \
-    --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench.pid \
+    --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench-$RANDOM_STRING.pid \
     --exec $TELEGRAF_PATH \
-    -- --config ~/ClickBench/influxdb3-external/telegraf-clickbench.conf \
-        --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench.pid > ~/ClickBench/influxdb3-external/telegraf-clickbench.log 2>&1
+    -- --config ~/ClickBench/influxdb3-external/telegraf-clickbench-$RANDOM_STRING.conf \
+        --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench-$RANDOM_STRING.pid > ~/ClickBench/influxdb3-external/telegraf-clickbench-$RANDOM_STRING.log 2>&1
 
 sleep 240
 
-start-stop-daemon --stop --oknodo --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench.pid
+start-stop-daemon --stop --oknodo --pidfile ~/ClickBench/influxdb3-external/telegraf-clickbench-$RANDOM_STRING.pid
 
 echo "Import data done"
 
