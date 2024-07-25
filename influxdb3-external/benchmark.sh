@@ -15,6 +15,8 @@ echo "Running the benchmark"
 cp $HOME/ClickBench/datasets/hits_aa.csv.gz .
 gzip -d hits_aa.csv.gz
 
+RANDOM_STRING=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 3)
+
 cat <<'EOF' > telegraf-clickbench-$RANDOM_STRING.conf
 [agent]
   interval = "2m"
@@ -57,8 +59,6 @@ cat <<'EOF' > telegraf-clickbench-$RANDOM_STRING.conf
   token = "$TOKEN"
   content_encoding = "gzip"
 EOF
-
-RANDOM_STRING=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 3)
 
 HOST=${HOST} TOKEN=${TOKEN} DATABASE=${DATABASE} start-stop-daemon --start \
     --background \
